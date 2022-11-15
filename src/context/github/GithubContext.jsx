@@ -10,6 +10,8 @@ export const GithubProvider = ({ children }) => {
 
     const initialState = {
         users: [],
+        user: {},
+        repos: [],
         loading: false
     }
 
@@ -59,6 +61,54 @@ export const GithubProvider = ({ children }) => {
         })
     }
 
+    // Get a Single user result
+    const getUser = async (login) =>{
+        setLoading();
+
+        const response = await fetch(`${GITHUB_URL}/users/${login}`,{
+            method: 'GET',
+            headers: {
+                'Content-type': 'application/json',
+                'Authorization': 'Basic '+ window.btoa('username:password')
+                //'Authorization': `token ${GITHUB_TOKEN}`
+            }
+        })
+
+        if(response.status === 400) {
+            window.location = '/notfound' // react-router redirect to not found page
+        } else {
+            const data = await response.json();
+            dispatch({
+                type: 'GET_USER',
+                payload: data
+            })
+        }
+    }
+
+    // Get user repos result
+    const getUserRepos = async (login) =>{
+        setLoading();
+
+        const response = await fetch(`${GITHUB_URL}/users/${login}/repos`,{
+            method: 'GET',
+            headers: {
+                'Content-type': 'application/json',
+                'Authorization': 'Basic '+ window.btoa('username:password')
+                //'Authorization': `token ${GITHUB_TOKEN}`
+            }
+        })
+
+        if(response.status === 400) {
+            window.location = '/notfound' // react-router redirect to not found page
+        } else {
+            const data = await response.json();
+            dispatch({
+                type: 'GET_USER_REPOS',
+                payload: data
+            })
+        }
+    }
+
     //Clear users from state
     const clearUserFromState = () => {
         dispatch({
@@ -78,8 +128,12 @@ export const GithubProvider = ({ children }) => {
         <GithubContext.Provider value={{
             users: state.users,
             loading: state.loading,
+            user: state.user,
+            repos: state.repos,
+            getUser,
             searchUsers,
-            clearUserFromState
+            clearUserFromState,
+            getUserRepos
         }}>
             {children}
         </GithubContext.Provider>
