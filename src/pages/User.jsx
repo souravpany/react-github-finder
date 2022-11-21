@@ -2,19 +2,34 @@ import { FaCodepen, FaStore, FaUserFriends, FaUsers } from 'react-icons/fa'
 import {useEffect, useContext} from 'react'
 import Spinner from '../components/layout/Spinner'
 import GithubContext from '../context/github/GithubContext'
-import { useParams, Link } from 'react-router-dom'
-import RepoList from '../components/repos/RepoList'
+import { useParams, Link } from 'react-router-dom';
+import RepoList from '../components/repos/RepoList';
+
+import { getUserAndRepos } from '../context/github/GithubAction';
 
 function User() {
 
   const params = useParams(); // through react router we can get the parameter
 
-  const {getUser,getUserRepos, user,repos, loading} = useContext(GithubContext);
+  const { dispatch, user,repos, loading} = useContext(GithubContext);
 
   useEffect(() => {
-    getUser(params.login)
-    getUserRepos(params.login)
-  },[])
+    dispatch({type: 'SET_LOADING'})
+    const getUserData = async () => {
+
+         //This API is called by AXIOS way with multiple promises in GithubAction.jsx
+        const userData = await getUserAndRepos(params.login);
+        dispatch({type: 'GET_USER_AND_REPOS', payload: userData});
+
+        // In the below code way we can call getUSer and getUserRepos separately 
+        // insted of calling at a time as above
+        // const userRepoData = await getUserRepos(params.login);
+        // dispatch({type: 'GET_REPOS', payload: userRepoData});
+    }
+
+    getUserData()
+
+  },[dispatch, params.login])
 
   // Destructuring the user data 
   const {
