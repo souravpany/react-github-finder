@@ -6,7 +6,7 @@ function About() {
           A React app to search GitHub profiles and see profile details.
           Source code can be found in my github account - 
           <strong>
-            <a href='https://github.com/souravpany/react-feedback-app'> Sourav Kumar Pany</a>
+            <a href='https://github.com/souravpany'> Sourav Kumar Pany</a>
           </strong>
           .
         </p>
