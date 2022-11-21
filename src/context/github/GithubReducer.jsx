@@ -3,19 +3,19 @@ const githubReducer = (state, action) => {
         case 'GET_USERS':
             return {
                 ...state,
-                users: action.payload,
+                users: action.payload, // payload can be named as anything
                 loading: false
         }
         case 'GET_USER':
             return {
                 ...state,
-                user: action.payload,
+                user: action.payload, // payload can be named as anything
                 loading: false
         }
         case 'GET_USER_REPOS':
             return {
                 ...state,
-                repos: action.payload,
+                repos: action.payload, // payload can be named as anything
                 loading: false
         }
         case 'SET_LOADING':
